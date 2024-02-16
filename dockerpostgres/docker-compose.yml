@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+
+  db:
+    container_name: mimic_data
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: aa5118
+      POSTGRES_PASSWORD: mimic
+      POSTGRES_DB: mimic
+    ports:
+      -  "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../mimic-iii-clinical-database-1.4:/mimic_data
+    networks:
+      thesis_network:
+        ipv4_address: 10.45.20.20
+
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      thesis_network:
+        ipv4_address: 10.45.20.25
+
+volumes:
+  pgdata:
+
+networks:
+  thesis_network:
+    external: true
